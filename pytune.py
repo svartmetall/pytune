@@ -1,4 +1,5 @@
-from audio_freq import audio_freq
+# Просто файл для запуску програми.
 
-while True:
-    print('Frequency: ', audio_freq(), 'Hz')
+from widget import widget
+
+widget()

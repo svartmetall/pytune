@@ -1,29 +1,30 @@
-import sys
+# Гарне вікно з не менш гарним шрифтом.
+# Шрифт Digital-7 Mono.
 
-from PyQt5.QtWidgets import QWidget, QLCDNumber, QVBoxLayout, QApplication
+import tkinter
+from get_note import get_note
 
 
-class PyTuneWidget(QWidget):
+def widget():
 
-    def __init__(self):
-        super().__init__()
+    # Те, що стосується вікна.
 
-        self.init_ui()
+    window = tkinter.Tk()
+    window.title('Audio frequency - PyTune')
+    window.geometry('357x79+200+200')
+    window.resizable(False, False)
 
-    def init_ui(self):
+    # Оновлює екран, беручи нові показники частоти.
 
-        lcd = QLCDNumber(7)
-        vbox = QVBoxLayout()
+    def refresh():
+        lcd.after(150, refresh)
+        lcd['text'] = get_note()
 
-        vbox.addWidget(lcd)
+    # Те, що стосується вмісту вікна.
 
-        self.setLayout(vbox)
-        self.setGeometry(200, 200, 400, 150)
-        self.setWindowTitle('Audio frequency - PyTune')
-        self.show()
+    lcd = tkinter.Label(window, font=('Digital-7 Mono', 64), bg='black', fg='red')
 
-if __name__ == '__main__':
+    lcd.after_idle(refresh)
+    lcd.place(anchor="nw")
 
-    app = QApplication(sys.argv)
-    ex = PyTuneWidget()
-    sys.exit(app.exec_())
+    window.mainloop()
