@@ -1,30 +1,37 @@
 # Гарне вікно з не менш гарним шрифтом.
 # Шрифт Digital-7 Mono.
 
-import tkinter
-from get_note import get_note
+from tkinter import Tk, Label
+
+
+# Функція повертає значення з файлу freqs.txt
+
+def open_file():
+    freq_file = open('freqs.txt', 'r')
+    freq = freq_file.read()
+    freq_file.close()
+    return freq
 
 
 def widget():
 
+    # Оновлює екран, беручи нові значення з файлу.
+
+    def refresh():
+        lcd.after(300, refresh)
+        lcd['text'] = open_file()
+
     # Те, що стосується вікна.
 
-    window = tkinter.Tk()
+    window = Tk()
     window.title('Audio frequency - PyTune')
     window.geometry('357x79+200+200')
     window.resizable(False, False)
 
-    # Оновлює екран, беручи нові показники частоти.
-
-    def refresh():
-        lcd.after(150, refresh)
-        lcd['text'] = get_note()
-
     # Те, що стосується вмісту вікна.
 
-    lcd = tkinter.Label(window, font=('Digital-7 Mono', 64), bg='black', fg='red')
-
-    lcd.after_idle(refresh)
+    lcd = Label(window, font=('Digital-7 Mono', 64), bg='black', fg='red')
     lcd.place(anchor="nw")
+    lcd.after_idle(refresh)
 
     window.mainloop()

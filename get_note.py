@@ -1,12 +1,9 @@
 # Функція перетворює частоту на назву ноти.
 # Та додає до відображення стрілочки - напрям при настройці.
 
-import numpy
-from audio_freq import audio_freq
 
-
-def get_note():
-    current_note = audio_freq()
+def get_note(freq):
+    current_note = freq
 
     # Список всіх значень частоти для нот 0-127
 
@@ -18,6 +15,8 @@ def get_note():
         notes_frequencies.append(freq)
 
     # Пошук найближчих нот для виміряної частоти.
+
+    next_note = 1
 
     for item in notes_frequencies:
         if item <= current_note:
@@ -39,12 +38,13 @@ def get_note():
 
     def freq_to_note():
         notes_list = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
-        note = notes_list[notes_frequencies.index(nearest_note) % 12]
-        octave = notes_frequencies.index(nearest_note) // 12 - 1
-        if len(str(note)+str(octave)) < 3:
-            return str(note) + str(octave) + ' '
+        note = str(notes_list[notes_frequencies.index(nearest_note) % 12])
+        octave = str(notes_frequencies.index(nearest_note) // 12 - 1)
+
+        if len(note + octave) < 3:
+            return note + octave + ' '
         else:
-            return str(note)+str(octave)
+            return note[0] + octave + note[1]
 
     note_name = freq_to_note()
 
@@ -53,7 +53,7 @@ def get_note():
     def add_arrows():
         half_note = (next_note - previous_note) / 2
         arrow_entry = half_note / 3
-        notes_difference = numpy.absolute(current_note - nearest_note)
+        notes_difference = abs(current_note - nearest_note)
         if notes_difference <= arrow_entry / 3:
             arrows = '   '
         elif notes_difference <= arrow_entry:
@@ -69,9 +69,15 @@ def get_note():
             arrows = arrows[::-1]
             return arrows.replace('>', '<')
 
+    # Повернення повного відображення ноти на дисплеї.
+
     if current_note - nearest_note < 0:
         full_note_view = add_arrows() + note_name + '   '
     else:
         full_note_view = '   ' + note_name + add_arrows()
 
     return full_note_view
+
+
+if __name__ == '__main__':
+    assert get_note(250) == '   B3 << '
